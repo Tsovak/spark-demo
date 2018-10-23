@@ -1,0 +1,13 @@
+#### test properties
+spring:
+  data:
+    mongodb:
+      database: embeded_db
+
+logging.level.org.springframework.boot.autoconfigure.mongo.embedded: error
+
+logging:
+  level:
+   root: debug
+   org.springframework.data: debug
+   org.springframework.data.mongodb.core.MongoTemplate: debug

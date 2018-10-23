@@ -1,0 +1,189 @@
+swagger: "2.0"
+info:
+  description: ""
+  version: "1.0.0"
+  title: "Swagger Spark REST API"
+  contact:
+    email: ""
+  license:
+    name: "Apache 2.0"
+    url: "http://www.apache.org/licenses/LICENSE-2.0.html"
+host: "localhost:4567"
+basePath: "/"
+tags:
+- name: "text"
+- name: "users"
+- name: "stat"
+schemes:
+- "http"
+paths:
+  /text:
+    get:
+      tags:
+        - "text"
+      summary: "The text example"
+      produces:
+      - "text/html"
+      responses:
+        200:
+          description: "OK"
+
+  /users:
+    post:
+      tags:
+      - "users"
+      summary: "Add a new user"
+      operationId: "newuser"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "query"
+        name: "name"
+        type: "string"
+        description: "The new name of User"
+        required: false
+      responses:
+        200:
+          description: "OK"
+
+    get:
+      tags:
+      - "users"
+      summary: "Finds all Users"
+      operationId: "allusers"
+      produces:
+      - "application/json"
+      responses:
+        200:
+          description: "OK"
+          schema:
+            type: "array"
+            items:
+              type: "string"
+
+  /users/{uuid}:
+    get:
+      tags:
+      - "users"
+      summary: "Finds User by UUID"
+      operationId: "findByUUID"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "uuid"
+        in: "path"
+        required: true
+        type: "UUID"
+      responses:
+        200:
+          description: "successful operation"
+        404:
+          description: "Not found"
+
+  /users/{userUuid}:
+    delete:
+      tags:
+      - "users"
+      summary: "Delete User by UUID"
+      operationId: "deleteByUUID"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "path"
+        name: "userUuid"
+        required: true
+        type: "UUID"
+      responses:
+        200:
+          description: OK
+
+
+  /users/{uuid}/activity/{activity}:
+    post:
+      tags:
+      - "users"
+      summary: "Add activity"
+      operationId: "addActivity"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "uuid"
+        in: "path"
+        description: "UUID of User that needs to be updated"
+        required: true
+      - name: "activity"
+        in: "path"
+        description: "Activity value"
+        required: false
+        type: "integer"
+        format: "int64"
+      responses:
+        200:
+          description: OK
+        404:
+          description: "Not found"
+        405:
+          description: "Invalid input"
+
+  /users/{uuid}/activity/:
+    get:
+      tags:
+      - "users"
+      summary: "Find activity by user UUID"
+      operationId: "getActivity"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "path"
+        name: "uuid"
+        description: "UUID of User"
+        required: true
+      - name: "fromDate"
+        in: "query"
+        description: "Date from "
+        required: false
+        type: "string"
+        format: "LocalDateTime"
+      - name: "toDate"
+        in: "query"
+        description: "Date to "
+        required: false
+        type: "string"
+        format: "LocalDateTime"
+      responses:
+        200:
+          description: "successful operation"
+        404:
+          description: "User not found"
+
+  /newest:
+    get:
+      tags:
+      - "stat"
+      summary: "Find newest users per period"
+      operationId: "newest"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "fromDate"
+        in: "query"
+        description: "Date from "
+        required: false
+        type: "string"
+        format: "LocalDateTime"
+      - name: "toDate"
+        in: "query"
+        description: "Date to "
+        required: false
+        type: "string"
+        format: "LocalDateTime"
+      responses:
+        200:
+          description: "successful operation"
+        400:
+          description: "Cannot parse the date params"
+        404:
+          description: "User not found"
+

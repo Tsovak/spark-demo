@@ -1,0 +1,37 @@
+version: '3.1'
+services:
+  mongodb:
+    container_name: mongo-container
+    image: mongo:3.6
+    environment:
+      - MONGO_DATA_DIR=/data/db
+      - MONGO_LOG_DIR=/dev/null
+    volumes:
+      - ./db:/data/db
+    ports:
+        - 27017:27017
+    command: mongod --logpath=/dev/null
+
+  app:
+    restart: always
+    volumes:
+      - ~/.m2:/root/.m2
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    ports:
+      - 4567:4567
+    depends_on:
+      - mongodb
+
+  swagger:
+   container_name: swagger
+   image: swaggerapi/swagger-ui
+   environment:
+     - SWAGGER_JSON=/sw/swagger.json
+   volumes:
+     - ./swagger/:/sw/
+   ports:
+     - 8888:8080
+   links:
+     - app
