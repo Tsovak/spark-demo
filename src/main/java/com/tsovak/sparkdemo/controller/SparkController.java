@@ -70,12 +70,12 @@ public class SparkController {
         return (request, response) -> {
             enableCORS(response);
             UUID uuid = UUID.fromString(request.params(":uuid"));
-            Optional<User> gamer = userService.find(uuid);
-            if (!gamer.isPresent()) {
+            Optional<User> user = userService.find(uuid);
+            if (!user.isPresent()) {
                 response.status(404);
-                return new ResponseTemplate("No gamer with uuid '%s' found", uuid.toString());
+                return new ResponseTemplate("No user with uuid '%s' found", uuid.toString());
             }
-            return gamer.get();
+            return user.get();
         };
     }
 
@@ -98,12 +98,12 @@ public class SparkController {
             enableCORS(response);
             UUID uuid = UUID.fromString(request.params(":uuid"));
             long activity = Long.parseLong(request.params(":activity"));
-            Optional<User> gamer = userService.find(uuid);
-            if (!gamer.isPresent()) {
+            Optional<User> userOptional = userService.find(uuid);
+            if (!userOptional.isPresent()) {
                 response.status(404);
                 return new ResponseTemplate("No user with uuid '%s' found", uuid.toString());
             }
-            User user = gamer.get();
+            User user = userOptional.get();
             Statistics statistics = new Statistics(UUID.randomUUID(), user.getUuid(), activity, LocalDateTime.now());
             user.getStatistics().add(statistics);
             userService.save(user);
@@ -125,8 +125,8 @@ public class SparkController {
             String fromDate = request.queryParams("fromDate");
             String toDate = request.queryParams("toDate");
 
-            Optional<User> gamer = userService.find(uuid);
-            if (!gamer.isPresent()) {
+            Optional<User> user = userService.find(uuid);
+            if (!user.isPresent()) {
                 response.status(404);
                 return new ResponseTemplate("No user with uuid '%s' found", uuid.toString());
             }
